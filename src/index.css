@@ -1,0 +1,251 @@
+:root {
+  /* Color Palette - Pastel & Soft */
+  --bg-app: #F5F7FA;
+  --bg-card: #FFFFFF;
+
+  --primary: #4F46E5;
+  /* Indigo/Blue-ish */
+  --primary-light: #E0E7FF;
+
+  --success: #10B981;
+  /* Emerald */
+  --success-light: #D1FAE5;
+
+  --text-main: #1E293B;
+  --text-muted: #64748B;
+
+  --border-light: #E2E8F0;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Radii */
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utilities */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  font-family: inherit;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca;
+}
+
+.btn-icon {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.25rem;
+}
+
+.btn-icon:hover {
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.btn-delete:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Form Styles */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Typography Helpers */
+.text-h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.text-h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Weekly Progress Dots */
+.weekly-dots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--border-light);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.dot.completed {
+  background-color: var(--success);
+}
+
+.dot:hover {
+  transform: scale(1.2);
+}
+
+/* Monthly Grid */
+.monthly-container {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.monthly-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.monthly-table th,
+.monthly-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border: 1px solid var(--border-light);
+}
+
+.monthly-table th {
+  background: var(--bg-app);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.monthly-cell-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.1s;
+}
+
+.monthly-cell-btn.active {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
