@@ -1,33 +1,38 @@
 :root {
-  /* Color Palette - Pastel & Soft */
-  --bg-app: #F5F7FA;
+  /* Dreamy Lavender Theme: Soft Violet & Poppins */
+  --bg-app: #F3F0FF;
+  /* Pale Lavender/White */
   --bg-card: #FFFFFF;
+  --bg-subtle: #F8F7FF;
+  /* Very light violet tint for headers */
 
-  --primary: #4F46E5;
-  /* Indigo/Blue-ish */
-  --primary-light: #E0E7FF;
+  --primary: #8B5CF6;
+  /* Violet */
+  --primary-light: #F3E8FF;
+  /* Pale Violet */
+  --primary-dark: #6D28D9;
+  /* Deep Violet */
+  --primary-rgb: 139, 92, 246;
 
-  --success: #10B981;
-  /* Emerald */
-  --success-light: #D1FAE5;
+  --success: #34D399;
+  /* Soft Emerald */
 
-  --text-main: #1E293B;
-  --text-muted: #64748B;
+  --border-strong: #E9D5FF;
+  /* Lavender Border */
+  --border-light: #F3F0FF;
+  /* Very Light Border */
 
-  --border-light: #E2E8F0;
+  --text-main: #1F2937;
+  /* Gray 900 */
+  --text-muted: #6B7280;
+  /* Gray 500 */
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-sm: 0 4px 6px -1px rgba(139, 92, 246, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(139, 92, 246, 0.1);
 
-  /* Radii */
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-full: 9999px;
-
-  /* Typography */
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  /* Mapping 'serif' variable to Poppins for the heading font slot since we are removing serifs */
+  --font-serif: 'Poppins', sans-serif;
+  --font-sans: 'Inter', sans-serif;
 }
 
 * {
@@ -40,119 +45,25 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Utilities */
 .container {
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 3rem 2rem;
 }
 
-.card {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: none;
-  font-family: inherit;
-  gap: 0.5rem;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #4338ca;
-}
-
-.btn-icon {
-  background: transparent;
-  color: var(--text-muted);
-  padding: 0.25rem;
-}
-
-.btn-icon:hover {
-  color: var(--primary);
-  background-color: var(--primary-light);
-}
-
-.btn-delete:hover {
-  color: #ef4444;
-  background-color: #fee2e2;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-
-/* Form Styles */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
-}
-
-/* Typography Helpers */
-.text-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.text-h2 {
-  font-size: 1.5rem;
+/* Typography */
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  /* Poppins */
   font-weight: 600;
   color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
 .text-muted {
@@ -163,9 +74,311 @@ body {
   font-size: 0.875rem;
 }
 
-/* Custom Scrollbar */
+/* Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid white;
+}
+
+/* Spreadsheet Table Styles */
+.spreadsheet-container {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  /* Bubbly roundness */
+  box-shadow: var(--shadow-sm);
+}
+
+.sheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sheet-table th {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid var(--border-strong);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-family: var(--font-serif);
+  /* Poppins for headers */
+  letter-spacing: 0.05em;
+}
+
+.sheet-table th.day-header {
+  border-right: 1px solid var(--border-light);
+}
+
+.sheet-table td {
+  border: 1px solid var(--border-light);
+  padding: 0;
+  text-align: center;
+  height: 44px;
+  /* Taller rows */
+}
+
+.sheet-table td.name-col {
+  text-align: left;
+  padding: 0.25rem 1.25rem;
+  font-weight: 500;
+  min-width: 200px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  border-right: 1px solid var(--border-strong);
+}
+
+/* Habit Row & Delete Button */
+.name-col:hover .delete-habit-btn {
+  opacity: 1;
+}
+
+.delete-habit-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  color: #EF4444;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-habit-btn:hover {
+  background: #FEF2F2;
+}
+
+.sheet-table td.stat-col {
+  background: var(--bg-subtle);
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.85rem;
+}
+
+/* Custom Checkbox Cell */
+.check-btn {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Bouncy transition */
+}
+
+.check-btn:hover {
+  background-color: var(--primary-light);
+}
+
+.check-btn.checked {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+/* Sidebar / Special Tasks / Components */
+.component-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s ease;
+}
+
+.special-header {
+  background: transparent;
+  padding: 0 0 1rem 0;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.special-task-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  /* Slightly stronger border to pop */
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease;
+}
+
+.special-task-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.special-task-card.done {
+  background: var(--bg-subtle);
+  opacity: 0.6;
+}
+
+.task-card-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--text-main);
+  outline: none;
+}
+
+.delete-task-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: var(--text-muted);
+}
+
+.special-task-card:hover .delete-task-btn {
+  opacity: 1;
+}
+
+.delete-task-btn:hover {
+  color: #EF4444;
+}
+
+/* Form Styles */
+.input-underline {
+  border: none;
+  border-bottom: 2px solid var(--border-strong);
+  background: transparent;
+  padding: 0.75rem 0;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-underline:focus {
+  border-color: var(--primary);
+}
+
+/* Utilities */
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 12px;
+  font-family: var(--font-serif);
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.btn-icon:hover {
+  background: var(--bg-subtle);
+  color: var(--text-main);
+}
+
+/* Exam Scheduler Styles */
+.exam-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+}
+
+.exam-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary);
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-serif);
+}
+
+.type-badge.exam {
+  background: #DBEAFE;
+  /* Soft Blue */
+  color: #1E40AF;
+}
+
+.type-badge.practical {
+  background: #F3E8FF;
+  /* Soft Purple */
+  color: #7C3AED;
+}
+
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.countdown-badge.urgent {
+  background: #FFE4E6;
+  color: #E11D48;
+}
+
+.countdown-badge.done {
+  background: dcfce7;
+  color: #166534;
+  text-decoration: line-through;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -173,79 +386,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-light);
-  border-radius: 4px;
+  background: var(--border-strong);
+  border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-/* Weekly Progress Dots */
-.weekly-dots {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background-color: var(--border-light);
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.dot.completed {
-  background-color: var(--success);
-}
-
-.dot:hover {
-  transform: scale(1.2);
-}
-
-/* Monthly Grid */
-.monthly-container {
-  overflow-x: auto;
-  padding-bottom: 1rem;
-}
-
-.monthly-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 800px;
-}
-
-.monthly-table th,
-.monthly-table td {
-  padding: 0.75rem;
-  text-align: center;
-  border: 1px solid var(--border-light);
-}
-
-.monthly-table th {
-  background: var(--bg-app);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.monthly-cell-btn {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--border-light);
-  background: transparent;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: transparent;
-  transition: all 0.1s;
-}
-
-.monthly-cell-btn.active {
-  background: var(--success);
-  border-color: var(--success);
-  color: white;
+  background: var(--primary);
 }

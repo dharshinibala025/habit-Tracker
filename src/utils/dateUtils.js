@@ -52,6 +52,26 @@ export const getCompletionPercentage = (habits) => {
   return Math.round((completedCount / habits.length) * 100);
 };
 
+// Helper to get max streak within a set of days
+export const calculateMaxStreakInRange = (completedDates, monthDays) => {
+  if (!completedDates || completedDates.length === 0) return 0;
+
+  let maxStreak = 0;
+  let currentStreak = 0;
+
+  // Iterate through the days of the month in order
+  monthDays.forEach(day => {
+    if (completedDates.includes(day)) {
+      currentStreak++;
+      if (currentStreak > maxStreak) maxStreak = currentStreak;
+    } else {
+      currentStreak = 0;
+    }
+  });
+
+  return maxStreak;
+};
+
 export const getLast7Days = () => {
   return Array.from({ length: 7 })
     .map((_, i) => {
@@ -67,3 +87,6 @@ export const getMonthDays = (referenceDate = new Date()) => {
 
   return eachDayOfInterval({ start, end }).map(d => format(d, 'yyyy-MM-dd'));
 };
+
+export const getMonthName = (date = new Date()) => format(date, 'MMMM');
+export const getYear = (date = new Date()) => format(date, 'yyyy');

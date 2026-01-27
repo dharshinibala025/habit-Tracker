@@ -1,0 +1,22 @@
+export const punishments = [
+    "Send a voice note singing 'Happy Birthday' to your bestie (even if it's not their birthday).",
+    "Post an embarrassing childhood photo on your story for 24 hours.",
+    "Buy your bestie their favorite chocolate/snack.",
+    "Do 20 squats while on a video call with your friend.",
+    "Text your crush/bestie a random vegetable name with no context.",
+    "Let your bestie choose your profile picture for a day.",
+    "Send a 1-minute video explaining why potatoes are the best vegetable.",
+    "Write a 4-line poem about your friend's greatness and send it.",
+    "Do a plank for 1 minute (and send proof!).",
+    "Treat your friend to a coffee/tea next time you meet.",
+    "Send a selfie making the ugliest face possible.",
+    "Speak in a fake accent for the next 10 minutes of conversation.",
+    "Like and comment on 5 of your friend's oldest Instagram posts.",
+    "Draw a portrait of your friend in 30 seconds and send it.",
+    "No social media for the next 2 hours!",
+    "Send a message saying 'I know your secret...' and then don't reply for 10 mins.",
+    "Record yourself dancing to a random song and send it.",
+    "Compliment your friend every hour for the next 3 hours.",
+    "Change your phone wallpaper to a photo of your friend for a day.",
+    "Admit one weird food combination you actually like."
+];
