@@ -1,44 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Trash2, Clock, BookOpen, Beaker, Plus } from 'lucide-react';
 import { format, differenceInDays, parseISO, isPast, isSameDay } from 'date-fns';
+import * as storage from '../utils/localStorage';
 
-const STORAGE_KEY_EXAMS = 'habitflow_exams';
+const ExamScheduler = ({ userId }) => {
+    const [exams, setExams] = useState([]);
 
-const ExamScheduler = () => {
-    const [exams, setExams] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEY_EXAMS);
-        return saved ? JSON.parse(saved) : [];
-    });
-
-    const [isFormOpen, setIsFormOpen] = useState(false);
     const [subject, setSubject] = useState('');
     const [date, setDate] = useState('');
     const [type, setType] = useState('Exam'); // 'Exam' or 'Practical'
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY_EXAMS, JSON.stringify(exams));
-    }, [exams]);
+        loadExams();
+    }, [userId]);
+
+    const loadExams = () => {
+        try {
+            const data = storage.getExams(userId);
+            setExams(data);
+        } catch (err) {
+            console.error('Failed to load exams:', err);
+        }
+    };
 
     const addExam = (e) => {
         e.preventDefault();
         if (!subject || !date) return;
 
-        const newExam = {
-            id: crypto.randomUUID(),
-            subject,
-            date,
-            type
-        };
-
-        // Add and Sort by date
-        setExams(prev => [...prev, newExam].sort((a, b) => new Date(a.date) - new Date(b.date)));
-        setSubject('');
-        setDate('');
-        setIsFormOpen(false);
+        try {
+            const newExam = storage.createExam(userId, subject, date, type);
+            setExams([...exams, newExam].sort((a, b) => new Date(a.date) - new Date(b.date)));
+            setSubject('');
+            setDate('');
+            setType('Exam');
+        } catch (err) {
+            console.error('Failed to add exam:', err);
+        }
     };
 
     const deleteExam = (id) => {
-        setExams(prev => prev.filter(e => e.id !== id));
+        try {
+            storage.deleteExam(userId, id);
+            setExams(prev => prev.filter(e => e._id !== id));
+        } catch (err) {
+            console.error('Failed to delete exam:', err);
+        }
     };
 
     const getDaysRemaining = (examDate) => {
@@ -116,16 +122,16 @@ const ExamScheduler = () => {
                     const isUrgent = status !== 'Done' && (status === 'Today' || parseInt(status) <= 3);
 
                     return (
-                        <div key={exam.id} className="exam-card">
+                        <div key={exam._id} className="exam-card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <span className={`type-badge ${exam.type.toLowerCase()}`}>
+                                    <span className={`type - badge ${exam.type.toLowerCase()} `}>
                                         {exam.type === 'Exam' ? <BookOpen size={10} /> : <Beaker size={10} />}
                                         {exam.type}
                                     </span>
                                     <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{exam.subject}</span>
                                 </div>
-                                <button onClick={() => deleteExam(exam.id)} className="btn-icon delete-task-btn">
+                                <button onClick={() => deleteExam(exam._id)} className="btn-icon delete-task-btn">
                                     <Trash2 size={14} />
                                 </button>
                             </div>
@@ -135,7 +141,7 @@ const ExamScheduler = () => {
                                     <Calendar size={12} />
                                     {format(parseISO(exam.date), 'MMM d, yyyy')}
                                 </div>
-                                <div className={`countdown-badge ${isUrgent ? 'urgent' : ''} ${status === 'Done' ? 'done' : ''}`}>
+                                <div className={`countdown - badge ${isUrgent ? 'urgent' : ''} ${status === 'Done' ? 'done' : ''} `}>
                                     <Clock size={10} />
                                     {status}
                                 </div>

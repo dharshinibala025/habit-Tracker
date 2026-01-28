@@ -1,47 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Calendar, Trash2, Clock, CheckCircle } from 'lucide-react';
 import { format, differenceInDays, parseISO, isPast, isSameDay } from 'date-fns';
+import * as storage from '../utils/localStorage';
 
-const STUDY_PLAN_KEY = 'habitflow_study_plan';
-
-const StudyPlan = () => {
-    const [plans, setPlans] = useState(() => {
-        const saved = localStorage.getItem(STUDY_PLAN_KEY);
-        return saved ? JSON.parse(saved) : [];
-    });
+const StudyPlan = ({ userId }) => {
+    const [plans, setPlans] = useState([]);
 
     const [subject, setSubject] = useState('');
     const [topic, setTopic] = useState('');
     const [date, setDate] = useState('');
 
     useEffect(() => {
-        localStorage.setItem(STUDY_PLAN_KEY, JSON.stringify(plans));
-    }, [plans]);
+        loadPlans();
+    }, [userId]);
+
+    const loadPlans = () => {
+        try {
+            const data = storage.getPlans(userId);
+            setPlans(data);
+        } catch (err) {
+            console.error('Failed to load plans:', err);
+        }
+    };
 
     const addPlan = (e) => {
         e.preventDefault();
         if (!subject || !topic || !date) return;
 
-        const newPlan = {
-            id: crypto.randomUUID(),
-            subject,
-            topic,
-            date,
-            completed: false
-        };
-
-        setPlans(prev => [...prev, newPlan].sort((a, b) => new Date(a.date) - new Date(b.date)));
-        setSubject('');
-        setTopic('');
-        setDate('');
+        try {
+            const newPlan = storage.createPlan(userId, subject, topic, date);
+            setPlans([...plans, newPlan].sort((a, b) => new Date(a.date) - new Date(b.date)));
+            setSubject('');
+            setTopic('');
+            setDate('');
+        } catch (err) {
+            console.error('Failed to add plan:', err);
+        }
     };
 
     const toggleComplete = (id) => {
-        setPlans(prev => prev.map(p => p.id === id ? { ...p, completed: !p.completed } : p));
+        setPlans(prev => prev.map(p => p._id === id ? { ...p, completed: !p.completed } : p));
+        try {
+            storage.togglePlan(userId, id);
+        } catch (err) {
+            console.error('Failed to toggle plan:', err);
+            loadPlans();
+        }
     };
 
     const deletePlan = (id) => {
-        setPlans(prev => prev.filter(p => p.id !== id));
+        try {
+            storage.deletePlan(userId, id);
+            setPlans(prev => prev.filter(p => p._id !== id));
+        } catch (err) {
+            console.error('Failed to delete plan:', err);
+        }
     };
 
     const getStatus = (planDate, completed) => {
@@ -116,11 +129,11 @@ const StudyPlan = () => {
                     const isOverdue = status === 'Overdue';
 
                     return (
-                        <div key={plan.id} className="exam-card" style={{ opacity: plan.completed ? 0.7 : 1 }}>
+                        <div key={plan._id} className="exam-card" style={{ opacity: plan.completed ? 0.7 : 1 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.25rem' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                     <button
-                                        onClick={() => toggleComplete(plan.id)}
+                                        onClick={() => toggleComplete(plan._id)}
                                         style={{
                                             background: 'none',
                                             border: 'none',
@@ -138,7 +151,7 @@ const StudyPlan = () => {
                                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{plan.topic}</span>
                                     </div>
                                 </div>
-                                <button onClick={() => deletePlan(plan.id)} className="btn-icon delete-task-btn">
+                                <button onClick={() => deletePlan(plan._id)} className="btn-icon delete-task-btn">
                                     <Trash2 size={14} />
                                 </button>
                             </div>

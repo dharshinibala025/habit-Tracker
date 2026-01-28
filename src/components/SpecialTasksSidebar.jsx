@@ -1,33 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Plus, X } from 'lucide-react';
+import * as storage from '../utils/localStorage';
 
-const STORAGE_KEY_TASKS = 'habitflow_special_tasks';
-
-const SpecialTasksSidebar = () => {
-    const [tasks, setTasks] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEY_TASKS);
-        return saved ? JSON.parse(saved) : [{ id: 1, text: '', done: false }];
-    });
+const SpecialTasksSidebar = ({ userId }) => {
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
-    }, [tasks]);
+        loadTasks();
+    }, [userId]);
+
+    const loadTasks = () => {
+        try {
+            const data = storage.getTasks(userId);
+            setTasks(data);
+        } catch (err) {
+            console.error('Failed to load tasks:', err);
+        }
+    };
 
     const handleChange = (id, text) => {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, text } : t));
+        setTasks(prev => prev.map(t => t._id === id ? { ...t, text } : t));
+        try {
+            storage.updateTask(userId, id, text);
+        } catch (err) {
+            console.error('Failed to update task:', err);
+        }
     };
 
     const toggleTask = (id) => {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
+        setTasks(prev => prev.map(t => t._id === id ? { ...t, done: !t.done } : t));
+        try {
+            storage.toggleTask(userId, id);
+        } catch (err) {
+            console.error('Failed to toggle task:', err);
+            loadTasks();
+        }
     };
 
     const addTask = () => {
-        const newId = Math.max(...tasks.map(t => t.id), 0) + 1;
-        setTasks([...tasks, { id: newId, text: '', done: false }]);
+        try {
+            const newTask = storage.createTask(userId, '');
+            setTasks([...tasks, newTask]);
+        } catch (err) {
+            console.error('Failed to add task:', err);
+        }
     };
 
     const deleteTask = (id) => {
-        setTasks(prev => prev.filter(t => t.id !== id));
+        try {
+            storage.deleteTask(userId, id);
+            setTasks(prev => prev.filter(t => t._id !== id));
+        } catch (err) {
+            console.error('Failed to delete task:', err);
+        }
     };
 
     return (
@@ -38,7 +63,7 @@ const SpecialTasksSidebar = () => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {tasks.map(task => (
-                    <div key={task.id} className={`special-task-card ${task.done ? 'done' : ''}`}>
+                    <div key={task._id} className={`special-task-card ${task.done ? 'done' : ''}`}>
                         <button
                             className="btn"
                             style={{
@@ -53,7 +78,7 @@ const SpecialTasksSidebar = () => {
                                 transition: 'all 0.2s',
                                 cursor: 'pointer'
                             }}
-                            onClick={() => toggleTask(task.id)}
+                            onClick={() => toggleTask(task._id)}
                         >
                             {task.done && <Check size={14} color="white" strokeWidth={4} />}
                         </button>
@@ -62,14 +87,14 @@ const SpecialTasksSidebar = () => {
                             className="task-card-input"
                             value={task.text}
                             placeholder="Add a new task..."
-                            onChange={(e) => handleChange(task.id, e.target.value)}
+                            onChange={(e) => handleChange(task._id, e.target.value)}
                             style={{
                                 textDecoration: task.done ? 'line-through' : 'none',
                                 color: task.done ? 'var(--text-muted)' : 'inherit'
                             }}
                         />
 
-                        <button onClick={() => deleteTask(task.id)} className="btn-icon delete-task-btn">
+                        <button onClick={() => deleteTask(task._id)} className="btn-icon delete-task-btn">
                             <X size={16} />
                         </button>
                     </div>

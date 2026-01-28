@@ -89,13 +89,13 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                             const percent = Math.round((daysCompletedInMonth / totalDaysInMonth) * 100);
 
                             return (
-                                <tr key={habit.id} className="habit-row">
+                                <tr key={habit._id} className="habit-row">
                                     <td className="name-col" style={{ position: 'sticky', left: 0, zIndex: 10, borderRight: '1px solid var(--border-strong)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <span>{habit.name}</span>
                                             <button
                                                 className="delete-habit-btn"
-                                                onClick={(e) => { e.stopPropagation(); onDelete(habit.id); }}
+                                                onClick={(e) => { e.stopPropagation(); onDelete(habit._id); }}
                                                 title="Delete Habit"
                                             >
                                                 <Trash2 size={14} />
@@ -113,7 +113,7 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                                             }}>
                                                 <button
                                                     className={`check-btn ${isCompleted ? 'checked' : ''}`}
-                                                    onClick={() => onToggle(habit.id, dateStr)}
+                                                    onClick={() => onToggle(habit._id, dateStr)}
                                                 >
                                                     {isCompleted && <Check size={16} strokeWidth={3} />}
                                                 </button>
