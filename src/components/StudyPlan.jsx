@@ -2,46 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Calendar, Trash2, Clock, CheckCircle } from 'lucide-react';
 import { format, differenceInDays, parseISO, isPast, isSameDay } from 'date-fns';
 
-const STUDY_PLAN_KEY = 'habitflow_study_plan';
-
-const StudyPlan = () => {
-    const [plans, setPlans] = useState(() => {
-        const saved = localStorage.getItem(STUDY_PLAN_KEY);
-        return saved ? JSON.parse(saved) : [];
-    });
+const StudyPlan = ({ userId }) => {
+    const [plans, setPlans] = useState([]);
 
     const [subject, setSubject] = useState('');
     const [topic, setTopic] = useState('');
     const [date, setDate] = useState('');
 
     useEffect(() => {
-        localStorage.setItem(STUDY_PLAN_KEY, JSON.stringify(plans));
-    }, [plans]);
+        loadPlans();
+    }, [userId]);
 
-    const addPlan = (e) => {
+    const loadPlans = async () => {
+        try {
+            const data = await api.getPlans(userId);
+            setPlans(data);
+        } catch (err) {
+            console.error('Failed to load plans:', err);
+        }
+    };
+
+    const addPlan = async (e) => {
         e.preventDefault();
         if (!subject || !topic || !date) return;
 
-        const newPlan = {
-            id: crypto.randomUUID(),
-            subject,
-            topic,
-            date,
-            completed: false
-        };
-
-        setPlans(prev => [...prev, newPlan].sort((a, b) => new Date(a.date) - new Date(b.date)));
-        setSubject('');
-        setTopic('');
-        setDate('');
+        try {
+            const newPlan = await api.createPlan({ userId, subject, topic, date });
+            setPlans([...plans, newPlan].sort((a, b) => new Date(a.date) - new Date(b.date)));
+            setSubject('');
+            setTopic('');
+            setDate('');
+        } catch (err) {
+            console.error('Failed to add plan:', err);
+        }
     };
 
-    const toggleComplete = (id) => {
-        setPlans(prev => prev.map(p => p.id === id ? { ...p, completed: !p.completed } : p));
+    const toggleComplete = async (id) => {
+        // Optimistic
+        setPlans(prev => prev.map(p => p._id === id ? { ...p, completed: !p.completed } : p));
+        try {
+            await api.togglePlan(id);
+        } catch (err) {
+            console.error('Failed to toggle plan:', err);
+            loadPlans();
+        }
     };
 
-    const deletePlan = (id) => {
-        setPlans(prev => prev.filter(p => p.id !== id));
+    const deletePlan = async (id) => {
+        try {
+            await api.deletePlan(id);
+            setPlans(prev => prev.filter(p => p._id !== id));
+        } catch (err) {
+            console.error('Failed to delete plan:', err);
+        }
     };
 
     const getStatus = (planDate, completed) => {

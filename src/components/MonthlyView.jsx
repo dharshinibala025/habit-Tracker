@@ -89,13 +89,21 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                             const percent = Math.round((daysCompletedInMonth / totalDaysInMonth) * 100);
 
                             return (
-                                <tr key={habit.id} className="habit-row">
+                                <tr key={habit._id} className="habit-row">
                                     <td className="name-col" style={{ position: 'sticky', left: 0, zIndex: 10, borderRight: '1px solid var(--border-strong)' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <span>{habit.name}</span>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <span>{habit.name}</span>
+                                                {habit.type === 'negative' && (
+                                                    <span style={{ fontSize: '0.65rem', color: 'var(--error)', fontWeight: 600 }}>QUIT</span>
+                                                )}
+                                                {habit.goal > 1 && (
+                                                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{habit.goal} {habit.unit}</span>
+                                                )}
+                                            </div>
                                             <button
                                                 className="delete-habit-btn"
-                                                onClick={(e) => { e.stopPropagation(); onDelete(habit.id); }}
+                                                onClick={(e) => { e.stopPropagation(); onDelete(habit._id); }}
                                                 title="Delete Habit"
                                             >
                                                 <Trash2 size={14} />
@@ -105,6 +113,23 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                                     {monthDays.map(dateStr => {
                                         const isCompleted = habit.completedDates.includes(dateStr);
                                         const isToday = dateStr === today;
+
+                                        // Styling logic
+                                        let btnClass = 'check-btn';
+                                        let icon = null;
+
+                                        if (habit.type === 'negative') {
+                                            if (isCompleted) {
+                                                btnClass += ' failed'; // "Completed" for negative means you did the bad thing
+                                                icon = <X size={16} strokeWidth={3} />;
+                                            }
+                                        } else {
+                                            if (isCompleted) {
+                                                btnClass += ' checked';
+                                                icon = <Check size={16} strokeWidth={3} />;
+                                            }
+                                        }
+
                                         return (
                                             <td key={dateStr} style={{
                                                 background: isToday ? 'var(--primary-light)' : 'inherit',
@@ -112,10 +137,10 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                                                 borderRight: isToday ? '1px solid var(--primary)' : 'none'
                                             }}>
                                                 <button
-                                                    className={`check-btn ${isCompleted ? 'checked' : ''}`}
-                                                    onClick={() => onToggle(habit.id, dateStr)}
+                                                    className={btnClass}
+                                                    onClick={() => onToggle(habit._id, dateStr)}
                                                 >
-                                                    {isCompleted && <Check size={16} strokeWidth={3} />}
+                                                    {icon}
                                                 </button>
                                             </td>
                                         );
@@ -141,6 +166,111 @@ const MonthlyView = ({ habits, onToggle, onDelete }) => {
                     </tbody>
                 </table>
             </div>
+            <style jsx>{`
+                .spreadsheet-container {
+                    overflow-x: auto;
+                    background: white;
+                    border: 1px solid var(--border-light);
+                    border-radius: 12px;
+                    box-shadow: var(--shadow-sm);
+                }
+                
+                .sheet-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 0.85rem;
+                }
+
+                th, td {
+                    padding: 0.5rem;
+                    text-align: center;
+                    border-right: 1px solid var(--border-subtle);
+                }
+
+                th {
+                    background: var(--bg-subtle);
+                    font-weight: 600;
+                    color: var(--text-muted);
+                    padding: 0.75rem 0.5rem;
+                }
+
+                .habit-row:hover {
+                    background: var(--bg-subtle);
+                }
+
+                .name-col {
+                    text-align: left;
+                    font-weight: 500;
+                    background: white;
+                    padding-left: 1rem;
+                }
+
+                .check-btn {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 4px;
+                    border: 1px solid var(--border-light);
+                    background: transparent;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: transparent;
+                    transition: all 0.2s;
+                    margin: 0 auto;
+                }
+
+                .check-btn:hover {
+                    background: var(--bg-subtle);
+                    border-color: var(--primary);
+                }
+
+                .check-btn.checked {
+                    background: var(--primary);
+                    border-color: var(--primary);
+                    color: white;
+                }
+                
+                .check-btn.failed {
+                    background: var(--error-light);
+                    color: var(--error);
+                    border-color: var(--error);
+                }
+
+                .btn-icon {
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    padding: 4px;
+                    border-radius: 4px;
+                }
+
+                .btn-icon:hover {
+                    background: var(--bg-subtle);
+                }
+
+                .delete-habit-btn {
+                    opacity: 0;
+                    background: transparent;
+                    border: none;
+                    color: var(--text-muted);
+                    cursor: pointer;
+                    padding: 4px;
+                    border-radius: 4px;
+                    transition: all 0.2s;
+                }
+
+                .habit-row:hover .delete-habit-btn {
+                    opacity: 1;
+                }
+
+                .delete-habit-btn:hover {
+                    background: var(--error-light);
+                    color: var(--error);
+                }
+             `}</style>
         </div>
     );
 };

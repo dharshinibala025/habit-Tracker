@@ -1,0 +1,41 @@
+🚨 IMPORTANT: MongoDB Atlas IP Whitelisting Required!
+====================================================
+
+Your application is ready to run, but MongoDB Atlas needs your IP address whitelisted.
+
+QUICK FIX (2 minutes):
+----------------------
+
+1. Open: https://cloud.mongodb.com/
+2. Login with your MongoDB Atlas account
+3. Click "Network Access" (left sidebar)
+4. Click "ADD IP ADDRESS" button
+5. Click "ALLOW ACCESS FROM ANYWHERE" 
+   (or add your specific IP)
+6. Click "Confirm"
+7. Wait 1-2 minutes
+
+That's it! Then run: start-app.bat
+
+WHY IS THIS NEEDED?
+-------------------
+MongoDB Atlas blocks all connections by default for security.
+You need to tell it which IP addresses can connect to your database.
+
+ALTERNATIVE: Add Specific IP
+-----------------------------
+If you don't want to allow all IPs:
+1. Go to https://www.whatismyip.com/
+2. Copy your IP address
+3. In MongoDB Atlas Network Access, click "Add IP Address"
+4. Paste your IP and click "Confirm"
+
+VERIFICATION:
+-------------
+After whitelisting, test the connection:
+  cd server
+  node test-connection.js
+
+You should see: "✅ MongoDB Connected Successfully!"
+
+Need help? Check SETUP_GUIDE.md for detailed instructions.

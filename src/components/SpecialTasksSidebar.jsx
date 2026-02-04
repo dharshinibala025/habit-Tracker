@@ -1,33 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Plus, X } from 'lucide-react';
+import { api } from '../services/api';
 
-const STORAGE_KEY_TASKS = 'habitflow_special_tasks';
-
-const SpecialTasksSidebar = () => {
-    const [tasks, setTasks] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEY_TASKS);
-        return saved ? JSON.parse(saved) : [{ id: 1, text: '', done: false }];
-    });
+const SpecialTasksSidebar = ({ userId }) => {
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
-    }, [tasks]);
+        loadTasks();
+    }, [userId]);
 
-    const handleChange = (id, text) => {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, text } : t));
+    const loadTasks = async () => {
+        try {
+            const data = await api.getTasks(userId);
+            setTasks(data);
+        } catch (err) {
+            console.error('Failed to load tasks:', err);
+        }
     };
 
-    const toggleTask = (id) => {
-        setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
+    const handleChange = async (id, text) => {
+        setTasks(prev => prev.map(t => t._id === id ? { ...t, text } : t));
+        // Debounce this in real app, but for now strict implementation
+        try {
+            await api.updateTask(id, text);
+        } catch (err) {
+            // Silent fail or retry
+        }
     };
 
-    const addTask = () => {
-        const newId = Math.max(...tasks.map(t => t.id), 0) + 1;
-        setTasks([...tasks, { id: newId, text: '', done: false }]);
+    const toggleTask = async (id) => {
+        setTasks(prev => prev.map(t => t._id === id ? { ...t, done: !t.done } : t));
+        try {
+            await api.toggleTask(id);
+        } catch (err) {
+            console.error('Failed to toggle task:', err);
+            loadTasks();
+        }
     };
 
-    const deleteTask = (id) => {
-        setTasks(prev => prev.filter(t => t.id !== id));
+    const addTask = async () => {
+        try {
+            const newTask = await api.createTask(userId, '');
+            setTasks([...tasks, newTask]);
+        } catch (err) {
+            console.error('Failed to add task:', err);
+        }
+    };
+
+    const deleteTask = async (id) => {
+        try {
+            await api.deleteTask(id);
+            setTasks(prev => prev.filter(t => t._id !== id));
+        } catch (err) {
+            console.error('Failed to delete task:', err);
+        }
     };
 
     return (
